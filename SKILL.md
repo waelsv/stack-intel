@@ -260,12 +260,13 @@ Assign two scores to each finding:
 - ⚪ **LOW** — Tangentially related. The provider is in the stack but this particular change doesn't touch anything the project depends on.
 - *(omit)* — Not relevant. Don't include it at all.
 
-**Impact if ignored** — what happens to the project if the user takes no action:
+**Impact if ignored** — a concrete statement of what happens to the project if the user takes no action. This must be specific to the project, not a generic category. Examples:
 
-- 🟥 **Breaking** — Something will stop working. Deprecated API removal, incompatible upgrade, policy violation, security vulnerability actively exploited.
-- 🟧 **Degrading** — Nothing breaks immediately, but the project accumulates risk or cost. Upcoming deprecation with a deadline, pricing increase, falling off a supported version.
-- 🟨 **Missed opportunity** — The project continues to work fine, but misses a chance to reduce cost, simplify architecture, or adopt a better approach.
-- ⬜ **Informational** — No action needed. Awareness only.
+- "Billing webhook handler in payments/webhook.ts will reject events after June 1 when the v2 payload format becomes mandatory"
+- "Paying ~$340/month more than necessary on inference costs based on current call volume in lib/ai.ts"
+- "No impact — awareness only"
+
+Write the impact as a single sentence a busy developer can scan. Ground it in the project's actual files and usage patterns, not in abstract risk categories.
 
 ## Step 4: Produce the Briefing
 
@@ -282,10 +283,11 @@ Format the output as a prioritized briefing. Lead with what matters most.
 
 🔴 HIGH RELEVANCE
 
-**[Provider]: [What happened]** | Impact if ignored: 🟥 Breaking / 🟧 Degrading / 🟨 Missed opportunity
+**[Provider]: [What happened]**
 [1-3 sentence summary of the development]
-→ Project impact: [Specific explanation referencing actual files, configs, or architectural decisions in the project]
-→ Action: [What to do — read the full post, test compatibility, no action needed, etc.]
+→ Project impact: [Specific explanation referencing actual files, configs, or architectural decisions]
+→ If ignored: [Concrete statement of what happens to this project if no action is taken]
+→ Recommendation: [Specific, actionable next step — based on analysis you already performed, not homework for the user. If you can check compatibility, read a migration guide, or assess the blast radius yourself, do it and report what you found.]
 → Deadline: [If applicable — deprecation date, enforcement date, or "none"]
 Source: [URL] ([publication date])
 
@@ -293,9 +295,10 @@ Source: [URL] ([publication date])
 
 🟡 MEDIUM RELEVANCE
 
-**[Provider]: [What happened]** | Impact if ignored: 🟧 Degrading / 🟨 Missed opportunity
+**[Provider]: [What happened]**
 [1-2 sentence summary]
-→ Why it matters: [Brief connection to the project]
+→ Project impact: [Brief connection to specific files/configs in the project]
+→ If ignored: [What happens to this project — one sentence]
 → Deadline: [If applicable, or "none"]
 Source: [URL] ([publication date])
 
@@ -303,8 +306,9 @@ Source: [URL] ([publication date])
 
 ⚪ LOW RELEVANCE
 
-**[Provider]: [What happened]** | Impact if ignored: ⬜ Informational
+**[Provider]: [What happened]**
 [One-line summary and why it's low priority]
+→ If ignored: [One sentence, typically "No impact — awareness only"]
 Source: [URL] ([publication date])
 
 ---
@@ -329,6 +333,7 @@ User says "pre-sprint check" or "what should I know before I start" — run the 
 - **Never fabricate provider news.** If a search doesn't return clear results, say "no recent developments found" — don't hallucinate announcements.
 - **Every finding must have a source.** Include the URL and publication date for every item in the briefing, at every relevance tier. If you can't link to a specific, verifiable source, don't include the finding.
 - **Always ground relevance in the actual codebase.** "This matters because you use X in file Y" is useful. "This might be relevant" is not.
+- **Do the work, don't assign homework.** If you can check compatibility, read a migration guide, assess whether the project is affected, or verify a version — do it yourself and report what you found. Never write "check if you're affected" when you can check. The user is reading this briefing to save time, not to get a to-do list.
 - **Respect the user's time.** A briefing with 3 high-relevance findings beats one with 20 medium-relevance items. Filter aggressively.
 - **The provider map is the foundation.** If Step 1 is wrong, everything downstream is wrong. When in doubt, ask the user to confirm the map.
 - **Strategic context from CLAUDE.md matters.** If the project's CLAUDE.md mentions goals, constraints, or architectural decisions, factor those into relevance scoring. A finding about a Stripe API deprecation is HIGH relevance if CLAUDE.md says "we process payments via direct Stripe integration with no abstraction layer."

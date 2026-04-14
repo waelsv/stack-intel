@@ -130,51 +130,45 @@ A prioritized briefing that looks like this:
 
 🔴 HIGH RELEVANCE
 
-Vercel: Edge Functions now support streaming responses up to 25MB | Impact if ignored: 🟨 Missed opportunity
-Previously capped at 4MB, this removes the main blocker for large API responses
-at the edge.
-→ Project impact: Your PDF generation endpoint in api/export.ts currently falls
-  back to a serverless function due to the size cap — this could move to edge.
-→ Action: Read the full post and evaluate migration for the export pipeline.
+**Vercel: Edge Functions now support streaming responses up to 25MB**
+Persistent streaming with up to 25MB payloads, up from the previous 4MB cap.
+→ Project impact: api/export.ts falls back to a serverless function because PDF
+  responses exceed the 4MB edge limit. That constraint is now removed.
+→ If ignored: Paying for serverless invocations on the export endpoint unnecessarily.
+  Based on current traffic (~2k exports/day), estimated ~$45/month in avoidable cost.
+→ Recommendation: Reviewed the migration guide — the only change needed is removing
+  the `runtime: 'nodejs'` override in api/export.ts. No API changes required.
 → Deadline: none
 Source: https://vercel.com/blog/edge-functions-streaming (April 10, 2026)
 
 🟡 MEDIUM RELEVANCE
 
-OpenAI: GPT-4o mini price reduction and new rate limits | Impact if ignored: 🟧 Degrading
+**OpenAI: GPT-4o mini price reduction and new rate limits**
 50% price drop on input tokens; new tier-based rate limits take effect May 1.
-→ Why it matters: Your summarization pipeline in lib/ai.ts calls GPT-4o mini
-  — costs drop automatically, but verify your tier still covers current volume.
-→ Deadline: May 1, 2026 (new rate limits)
+→ Project impact: lib/ai.ts calls GPT-4o mini for summarization (~12k calls/day).
+  Price drop saves ~$170/month automatically. New rate limit for your current tier
+  is 4,000 RPM — your peak is ~3,200 RPM, so you have headroom but not much.
+→ If ignored: Cost savings apply automatically. However, if traffic grows ~25%
+  you'll hit the new rate limit and get 429 errors in the summarization pipeline.
+→ Deadline: May 1, 2026 (new rate limits take effect)
 Source: https://openai.com/blog/gpt4o-mini-pricing-update (April 8, 2026)
 
 ⚪ LOW RELEVANCE
 
-Datadog: New browser SDK for session replay | Impact if ignored: ⬜ Informational
-Not relevant to current server-side monitoring setup.
+**Datadog: New browser SDK for session replay**
+Client-side session recording with heatmaps and frustration signals.
+→ If ignored: No impact — project uses Datadog for server-side monitoring only,
+  no browser SDK is installed.
 Source: https://www.datadoghq.com/blog/session-replay-sdk (April 5, 2026)
 
 Nothing found for: PostgreSQL, Redis
 ```
 
-Each finding has two scores:
+Each finding includes:
 
-**Relevance** (how closely it connects to your project, based on codebase evidence):
-
-| Level | Meaning |
-|---|---|
-| 🔴 HIGH | Directly affects a provider or API your project actively uses |
-| 🟡 MEDIUM | Affects a provider you use, but not the specific feature you depend on |
-| ⚪ LOW | Tangentially related — provider is in your stack but this change doesn't touch your usage |
-
-**Impact if ignored** (what happens if you take no action):
-
-| Level | Meaning |
-|---|---|
-| 🟥 Breaking | Something will stop working — API removal, policy violation, critical vulnerability |
-| 🟧 Degrading | Nothing breaks now, but risk or cost accumulates — upcoming deprecation, price increase |
-| 🟨 Missed opportunity | Project works fine, but you miss a chance to reduce cost or simplify |
-| ⬜ Informational | Awareness only, no action needed |
+- **Relevance** (🔴 HIGH / 🟡 MEDIUM / ⚪ LOW) — how closely this connects to your project, grounded in specific files and configs
+- **If ignored** — a concrete statement of what happens to *your* project if you do nothing, not a generic risk category
+- **Recommendation** — a specific next step based on analysis the skill already performed (it reads migration guides, checks compatibility, and assesses blast radius rather than telling you to do that yourself)
 
 ---
 
