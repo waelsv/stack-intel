@@ -279,7 +279,17 @@ Format the output as a prioritized briefing. Lead with what matters most.
 ### Scan date: [date]
 ### Providers scanned: [list]
 
+### Summary
+
+| Priority | Item | Impact | Deadline |
+|----------|------|--------|----------|
+| 🔴 HIGH | [Provider]: [What happened] | [Short impact-if-ignored statement] | [date or "none"] |
+| 🟡 MED | [Provider]: [What happened] | [Short impact-if-ignored statement] | [date or "none"] |
+| ⚪ LOW | [Provider]: [What happened] | [Short impact-if-ignored statement] | [date or "none"] |
+
 ---
+
+### Details
 
 🔴 HIGH RELEVANCE
 

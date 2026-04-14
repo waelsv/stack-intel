@@ -128,6 +128,18 @@ A prioritized briefing that looks like this:
 ### Scan date: 2026-04-14
 ### Providers scanned: Vercel, OpenAI, PostgreSQL, Twilio, Datadog, Redis
 
+### Summary
+
+| Priority | Item | Impact | Deadline |
+|----------|------|--------|----------|
+| 🔴 HIGH | Vercel: Edge Functions 25MB streaming | ~$45/mo in avoidable serverless cost | none |
+| 🟡 MED | OpenAI: GPT-4o mini price cut + rate limits | 429 errors at ~25% traffic growth | May 1, 2026 |
+| ⚪ LOW | Datadog: Browser session replay SDK | No impact | none |
+
+---
+
+### Details
+
 🔴 HIGH RELEVANCE
 
 **Vercel: Edge Functions now support streaming responses up to 25MB**
